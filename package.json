@@ -2,7 +2,7 @@
   "name": "homebridge-gree-ac",
   "displayName": "GREE Air Conditioner",
   "type": "module",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "private": false,
   "description": "Control GREE Air Conditioners from Homebridge",
   "author": "Peter Eiben",
@@ -28,7 +28,7 @@
   },
   "engines": {
     "node": "^20.19.0 || ^22.13.0 || ^24.0.0",
-    "homebridge": "^1.8.0 || ^2.0.0-beta.0"
+    "homebridge": "^1.8.0 || ^2.0.0"
   },
   "scripts": {
     "build": "genversion --esm -s src/version.ts && rimraf ./dist && tsc",

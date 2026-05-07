@@ -1,0 +1,533 @@
+{
+  "pluginAlias": "GREEAirConditioner",
+  "pluginType": "platform",
+  "singular": true,
+  "strictValidation": false,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "required": true,
+        "default": "GREE Air Conditioner"
+      },
+      "port": {
+        "type": "integer",
+        "required": false,
+        "minimum": 1025
+      },
+      "scanInterval": {
+        "type": "integer",
+        "required": false,
+        "default": 60,
+        "minimum": 5
+      },
+      "disableAutoDetection": {
+        "type": "boolean",
+        "default": false
+      },
+      "disableBroadcast": {
+        "type": "boolean",
+        "default": false
+      },
+      "devices": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "mac": {
+              "type": "string",
+              "required": true,
+              "pattern": "^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$"
+            },
+            "name": {
+              "type": "string",
+              "required": false
+            },
+            "model": {
+              "type": "string",
+              "required": false
+            },
+            "speedSteps": {
+              "type": "integer",
+              "required": true,
+              "default": 5,
+              "oneOf": [
+                {
+                  "title": "Model z 3 stopniami prędkości",
+                  "enum": [
+                    3
+                  ]
+                },
+                {
+                  "title": "Model z 5 stopniami prędkości",
+                  "enum": [
+                    5
+                  ]
+                }
+              ]
+            },
+            "statusUpdateInterval": {
+              "type": "integer",
+              "required": false,
+              "minimum": 1,
+              "placeholder": 10
+            },
+            "sensorOffset": {
+              "type": "integer",
+              "required": false,
+              "placeholder": 40
+            },
+            "minimumTargetTemperature": {
+              "type": "integer",
+              "required": false,
+              "minimum": 8,
+              "placeholder": 16
+            },
+            "maximumTargetTemperature": {
+              "type": "integer",
+              "required": false,
+              "maximum": 30,
+              "placeholder": 30
+            },
+            "xFanEnabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "temperatureSensor": {
+              "type": "string",
+              "required": true,
+              "default": "disabled",
+              "oneOf": [
+                {
+                  "title": "Wyłączony",
+                  "enum": [
+                    "disabled"
+                  ]
+                },
+                {
+                  "title": "Akcesorium podrzędne",
+                  "enum": [
+                    "child"
+                  ]
+                },
+                {
+                  "title": "Akcesorium oddzielne",
+                  "enum": [
+                    "separate"
+                  ]
+                }
+              ]
+            },
+            "temperatureStepSize": {
+              "type": "number",
+              "minimum": 0.5,
+              "multipleOf": 0.5,
+              "required": false
+            },
+            "disabled": {
+              "type": "boolean"
+            },
+            "modifyVerticalSwingPosition": {
+              "type": "integer",
+              "required": true,
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Nigdy",
+                  "enum": [
+                    0
+                  ]
+                },
+                {
+                  "title": "Zastępuj ustawienia domyślne po włączeniu urządzenia",
+                  "enum": [
+                    1
+                  ]
+                },
+                {
+                  "title": "Zastępuj ustawienia domyślne po włączeniu urządzenia lub wyłączeniu oscylowania",
+                  "enum": [
+                    2
+                  ]
+                },
+                {
+                  "title": "Ustawiaj zawsze po włączeniu urządzenia",
+                  "enum": [
+                    3
+                  ]
+                },
+                {
+                  "title": "Ustawiaj zawsze po włączeniu urządzenia lub wyłączeniu trybu oscylowania",
+                  "enum": [
+                    4
+                  ]
+                }
+              ]
+            },
+            "defaultVerticalSwing": {
+              "type": "integer",
+              "required": true,
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Domyślna dla urządzenia",
+                  "enum": [
+                    0
+                  ]
+                },
+                {
+                  "title": "Stała – najwyższa",
+                  "enum": [
+                    2
+                  ]
+                },
+                {
+                  "title": "Stała – wyższa",
+                  "enum": [
+                    3
+                  ]
+                },
+                {
+                  "title": "Stała – środkowa",
+                  "enum": [
+                    4
+                  ]
+                },
+                {
+                  "title": "Stała – niższa",
+                  "enum": [
+                    5
+                  ]
+                },
+                {
+                  "title": "Stała – najniższa",
+                  "enum": [
+                    6
+                  ]
+                }
+              ]
+            },
+            "defaultFanVerticalSwing": {
+              "type": "integer",
+              "required": true,
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Domyślna dla urządzenia",
+                  "enum": [
+                    0
+                  ]
+                },
+                {
+                  "title": "Stała – najwyższa",
+                  "enum": [
+                    2
+                  ]
+                },
+                {
+                  "title": "Stała – wyższa",
+                  "enum": [
+                    3
+                  ]
+                },
+                {
+                  "title": "Stała – środkowa",
+                  "enum": [
+                    4
+                  ]
+                },
+                {
+                  "title": "Stała – niższa",
+                  "enum": [
+                    5
+                  ]
+                },
+                {
+                  "title": "Stała – najniższa",
+                  "enum": [
+                    6
+                  ]
+                }
+              ]
+            },
+            "encryptionVersion" : {
+              "type": "integer",
+              "required": true,
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Automatyczny",
+                  "enum": [
+                    0
+                  ]
+                },
+                {
+                  "title": "v1",
+                  "enum": [
+                    1
+                  ]
+                },
+                {
+                  "title": "v2",
+                  "enum": [
+                    2
+                  ]
+                }
+              ]
+            },
+            "port": {
+              "type": "integer",
+              "required": false,
+              "minimum": 1025
+            },
+            "ip": {
+              "type": "string",
+              "required": false,
+              "format": "ipv4"
+            },
+            "fanControlEnabled": {
+              "type": "boolean"
+            },
+            "silentTimeRange": {
+              "type": "string",
+              "required": false,
+              "pattern": "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]-(((0[0-9]|1[0-9]|2[0-3]):[0-5][0-9])|24:00)$"
+            }
+          }
+        }
+      }
+    }
+  },
+  "layout": [
+    {
+      "key": "name",
+      "title": "Nazwa:"
+    },
+    {
+      "type": "flex",
+      "flex-flow": "row wrap",
+      "items": [
+        {
+          "key": "port",
+          "flex": "1 1 50%",
+          "title": "Port:",
+          "description": "Port UDP na poziomie bridge używany do wykrywania urządzeń (automatyczny, jeśli pole puste)"
+        },
+        {
+          "key": "scanInterval",
+          "flex": "1 1 50%",
+          "title": "Odstęp czasowy skanowania:",
+          "description": "Odstęp czasowy między próbami wykrycia urządzenia (60 sekund, jeśli pole puste)"
+        },
+        {
+          "key": "disableAutoDetection",
+          "flex": "1 1 50%",
+          "title": "Wyłącz automatyczne wykrywanie",
+          "description": "Gdy automatycznie wykrywanie jest wyłączone, jedynie jednostki wpisane w sekcji Urządzenia będą aktywne"
+        },
+        {
+          "key": "disableBroadcast",
+          "flex": "1 1 50%",
+          "title": "Wyłącz tryb broadcast",
+          "description": "Gdy tryb broadcast jest wyłączony, wyłącznie komunikaty unicast będą wysyłane w sieci",
+          "condition": {
+            "functionBody": "return model.disableAutoDetection;"
+          }
+        }
+      ]
+    },
+    {
+      "type": "array",
+      "key": "devices",
+      "title": "Urządzenia",
+      "buttonText": "Dodaj urządzenie",
+      "expandable": true,
+      "expanded": false,
+      "items": [
+        {
+          "type": "div",
+          "displayFlex": true,
+          "flex-flow": "row wrap",
+          "items": [
+            {
+              "key": "devices[].mac",
+              "flex": "1 1 50%",
+              "title": "Adres MAC (numer seryjny):",
+              "description": "Adres MAC urządzenia (małe litery, bez seperatorów)<br />LUB<br />wartość specjalna: <b>domyślna</b>"
+            },
+            {
+              "key": "devices[].name",
+              "flex": "1 1 50%",
+              "title": "Nazwa urządzenia:",
+              "description": "Własna nazwa urządzenia. Używaj wyłącznie znaków alfanumerycznych, spacji i apostrofu. Upewnij się, że zaczyna się i kończy znakiem alfanumerycznym. Unikaj emoji.",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac));"
+              }
+            },
+            {
+              "key": "devices[].disabled",
+              "flex": "1 1 100%",
+              "title": "Dezaktywuj urządzenie",
+              "description": "Jeśli pole jest zaznaczone, urządzenie zostanie usunięte z usługi HomeKit, oraz będzie przez nią ignorowane",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac));"
+              }
+            },
+            {
+              "key": "devices[].ip",
+              "flex": "1 1 50%",
+              "title": "Adres IP:",
+              "description": "Adres IP urządzenia (automatyczny, jeśli pole puste)",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].port",
+              "flex": "1 1 50%",
+              "title": "Port:",
+              "description": "Port UDP dedykowany dla urządzenia (automatyczny, jeśli pole puste)",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].statusUpdateInterval",
+              "flex": "1 1 50%",
+              "title": "Odstęp między zmianami statusu:",
+              "description": "Odstęp między aktualizacjami statusu urządzenia (w sekundach)",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].encryptionVersion",
+              "flex": "1 1 50%",
+              "title": "Poziom szyfrowania protokołu sieciowego:",
+              "description": "Pozostaw automatyczny. Jeśli nie działa, ustaw konkretną wersję.",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default)$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].model",
+              "flex": "1 1 50%",
+              "title": "Model urządzenia:",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].speedSteps",
+              "flex": "1 1 50%",
+              "title": "Poziomy prędkości wentylatora:",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].minimumTargetTemperature",
+              "flex": "1 1 50%",
+              "title": "Minimalna wartość temperatury docelowej:",
+              "description": "Minimalna wartość temperatury docelowej (w ℃)",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].maximumTargetTemperature",
+              "flex": "1 1 50%",
+              "title": "Maksymalna wartość temperatury docelowej:",
+              "description": "Maksymalna wartość temperatury docelowej (w ℃)",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].sensorOffset",
+              "flex": "1 1 50%",
+              "title": "Przesunięcie temperatury:",
+              "description": "Korekta czujnika temperatury (w ℃)",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].temperatureStepSize",
+              "flex": "1 1 50%",
+              "title": "Różnica stopni temperatur:",
+              "description": "Poprawne wartości: 0.5 (dla °F) oraz 1 (dla °C)<BR />(Liczenie z parametru jednostek temperatury Homebridge UI jeśli pusty lub nieprawidłowy)",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].xFanEnabled",
+              "flex": "1 1 50%",
+              "title": "Włącz xFan",
+              "description": "Jeśli aktywny, funkcja xFan będzie włączana automatycznie",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].temperatureSensor",
+              "flex": "1 1 50%",
+              "title": "Czujnik temperatury:",
+              "description": "Dodatkowy czujnik temperatury w aplikacji HomeKit",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].modifyVerticalSwingPosition",
+              "flex": "1 1 50%",
+              "title": "Modyfikuj pionową pozycję skrzydła:",
+              "description": "Wybierz, kiedy pionowa pozycja skrzydła ma być modyfikowana",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].defaultVerticalSwing",
+              "flex": "1 1 50%",
+              "title": "Pionowa pozycja skrzydła:",
+              "description": "Pionowa pozycja skrzydła w trybach grzania/chłodzenia",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true && model.devices[arrayIndices].modifyVerticalSwingPosition !== 0);"
+              }
+            },
+            {
+              "key": "devices[].fanControlEnabled",
+              "flex": "1 1 50%",
+              "title": "Włącz kontrolę wentylatora",
+              "description": "Jeśli funkcja aktywna, kontrola wentylatora zostanie dodana do aplikacji Dom a obsługa trybu wentylatora włączona",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].defaultFanVerticalSwing",
+              "flex": "1 1 50%",
+              "title": "Pionowa pozycja skrzydła w trybie wentylatora:",
+              "description": "Pionowa pozycja skrzydła, która ma być ustawiona w trybie wentylatora",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true && [3, 4].includes(model.devices[arrayIndices].modifyVerticalSwingPosition) && model.devices[arrayIndices].fanControlEnabled === true);"
+              }
+            },
+            {
+              "key": "devices[].silentTimeRange",
+              "flex": "1 1 50%",
+              "title": "Zakres czasowy trybu cichego:",
+              "description": "Godziny, w których jednostka nie powinna piszczeć przy wydawaniu jej poleceń (format: HH:MM-HH:MM, np.: 22:00-08:30)",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
