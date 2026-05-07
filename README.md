@@ -49,7 +49,7 @@ This plugin is designed to be as simple and clear as possible and supports prima
 ## Requirements
 
 * Node.js (>= 20.19.0 || >= 22.13.0 || >= 24.0.0) with NPM
-* Homebridge (>= 1.8.0 || >= 2.0.0-beta.0)
+* Homebridge (>= 1.8.0 || >= 2.0.0)
 
 The plugin finds all supported units automatically if they are located on the same subnet. If Homebridge is configured to use only selected network interfaces then auto detection is also limited to these selected interfaces. AC units on different subnets are also supported if the unit's IP address is set in the configuration. (MAC address have to be set correctly also.) Auto detection can be disabled by configuration parameter.
 
