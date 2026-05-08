@@ -23,7 +23,7 @@ Changes of the above parameters are ignored until the device is disabled and re-
 
 #### Updated dependencies
 - Changed supported Homebridge version from v2.0.0-beta.x to v2.0.0 or later
-- Node.js v18 is not supported any more 
+- Node.js v20 is not supported any more 
 
 ## [2.3.1] - 2026-03-29
 
