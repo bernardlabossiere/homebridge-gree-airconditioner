@@ -15,8 +15,7 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": ["node"]
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "eslint.config.js",
