@@ -505,8 +505,8 @@ export class GreeACPlatform implements DynamicPlatformPlugin {
       this.log.debug(`Accessory ${deviceInfo.mac} encryption version forced:`, deviceInfo.encryptionVersion);
     }
 
-    let accessory: MyPlatformAccessory | undefined = this.getAccessory(deviceInfo.mac);
-    let accessory_ts: MyPlatformAccessory | undefined = this.getAccessory(deviceInfo.mac + '_ts');
+    let accessory: MyPlatformAccessory | null = this.getAccessory(deviceInfo.mac);
+    let accessory_ts: MyPlatformAccessory | null = this.getAccessory(deviceInfo.mac + '_ts');
 
     if (deviceConfig?.disabled || !/^[a-f0-9]{12}$/.test(deviceConfig?.mac.substring(deviceConfig?.mac.indexOf('@')+1) || '000000000000')) {
       //do not skip unconfigured devices
@@ -521,14 +521,14 @@ export class GreeACPlatform implements DynamicPlatformPlugin {
         this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
         this.log.debug(`registerDevice - unregister (${devcfg.mac === undefined ? 'not configured' : 'disabled'}):`,
           accessory.displayName, accessory.UUID);
-        accessory = undefined;
+        accessory = null;
       }
       if (accessory_ts) {
         delete this.devices[accessory_ts.context.device.mac];
         this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory_ts]);
         this.log.debug(`registerDevice - unregister (${devcfg.mac === undefined ? 'not configured' : 'disabled'}):`,
           accessory_ts.displayName, accessory_ts.UUID);
-        accessory_ts = undefined;
+        accessory_ts = null;
       }
       return;
     }
@@ -579,7 +579,7 @@ export class GreeACPlatform implements DynamicPlatformPlugin {
       }
       delete this.devices[deviceInfo.mac + '_ts'];
       this.log.debug('registerDevice - unregister:', accessory_ts.displayName, accessory_ts.UUID);
-      accessory_ts = undefined;
+      accessory_ts = null;
     }
 
     if (accessory_ts && deviceConfig.temperatureSensor === TS_TYPE.separate) {
@@ -779,7 +779,7 @@ export class GreeACPlatform implements DynamicPlatformPlugin {
   }
 
   public getAccessory(mac: string) {
-    return this.devices[mac];
+    return this.devices[mac] ?? null;
   }
 
   // accessory specific functions
