@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.3.2] - 2026-05-07
+## [2.3.2] - 2026-05-08
 
 **<ins>Reminders:</ins>**
 - **All devices on the local subnet are automatically added to Homebridge since v2.1.7** Please use the "disabled" parameter to disable individual devices, or disable automatic device detection globally starting from version v2.2.2.
@@ -23,6 +23,7 @@ Changes of the above parameters are ignored until the device is disabled and re-
 
 #### Updated dependencies
 - Changed supported Homebridge version from v2.0.0-beta.x to v2.0.0 or later
+- Node.js v18 is not supported any more 
 
 ## [2.3.1] - 2026-03-29
 
