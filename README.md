@@ -14,7 +14,7 @@
 ![HU](https://flagcdn.com/16x12/hu.png) Magyar
 ![ES](https://flagcdn.com/16x12/es.png) Español
 ![PT](https://flagcdn.com/16x12/pt.png) Português
-![PL](https://flagcdn.com/16x12/pl.png) Polish
+![PL](https://flagcdn.com/16x12/pl.png) Polski
 
 </span>
 
