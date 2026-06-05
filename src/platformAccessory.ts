@@ -1625,7 +1625,9 @@ export class GreeAirConditioner {
       (this.mode === commands.mode.value.heat || this.mode === commands.mode.value.auto)) {
       this.platform.log.debug(`[${this.getDeviceLabel()}] updateStatus (Heating Threshold Temperature) ->`, this.targetTemperature);
       this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
-        .updateValue(this.targetTemperature);
+        .updateValue(this.status[commands.nofrost.code] === commands.nofrost.value.on
+          ? (this.deviceConfig.antiFrostTemperature ?? 8)
+          : this.targetTemperature);
     }
     // Temperature Display Units
     if (props.includes(commands.units.code)) {
