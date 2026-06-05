@@ -90,11 +90,11 @@ This plugin was designed to support the Home App's Heater Cooler functionality u
 
 ## Installation instructions
 
-It is recommended to install the plugin using the graphical user interface of Homebridge ([Homebridge Config UI X](https://www.npmjs.com/package/homebridge-config-ui-x)). You can find the plugin if you search on the Plugins page for GREE Air Conditioner ('GREE AC' or 'homebridge-gree-ac' if you'd like an exact match). It is recommended to configure the plugin using the same GUI controls.
+It is recommended to install the plugin using the graphical user interface of Homebridge ([Homebridge Config UI X](https://www.npmjs.com/package/homebridge-config-ui-x)). You can find the plugin if you search on the Plugins page for GREE Air Conditioner with Anti-Frost ('antifrost' or 'homebridge-gree-ac-antifrost' if you'd like an exact match). It is recommended to configure the plugin using the same GUI controls.
 
 Command line install:
 ```
-npm install homebridge-gree-ac -g
+npm install homebridge-gree-ac-antifrost -g
 ```
 If successfully installed and configured, your devices will appear on the Homebridge GUI Accessories page and also in Home App (if Homebridge is already connected to the Home App). (If the additional temperature sensor is enabled, then 2 items will be displayed for supported devices (Heater Cooler and Temperature Sensor). If Fan control is enabled, then an additional Fan accessory is also displayed in Home App.)
 
@@ -537,6 +537,54 @@ Check if you are using the correct version of configuration settings. It is alwa
 Versions earlier than v2.1.4 could add AC unit devices to Home App as an accessory when the device was detected but could not be bound (e.g. unsupported device). If you are using a version earlier than v2.1.4 and encounter this issue please upgrade to the latest version, then disable and re-enable your device.
 
 Versions v2.1.4 and later check binding before Home App registration and do not add unsupported devices to Home App. If you have a device which is not responding then it is probably not working (e.g. unplugged power cord or hardware failure) or is malfunctioning. Usually a device restart solves the problem (removing power from the device by unplugging or by using a hardware switch and after a few minutes restoring power).
+
+
+## Anti-Frost Feature (Fork by @bernardlabossiere)
+
+This fork adds an anti-frost switch directly on the heat pump accessory in Home App.
+
+### Configuration
+
+Add the following parameters to each device in the `devices` section:
+
+```json
+{
+  "mac": "your-mac-address",
+  "antiFrostSwitch": true,
+  "antiFrostTemperature": 8,
+  "antiFrostNameSuffix": "anti-frost"
+}
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `antiFrostSwitch` | boolean | false | Enables the anti-frost switch on the accessory |
+| `antiFrostTemperature` | number | 8 | Target temperature (°C) when anti-frost is active |
+| `antiFrostNameSuffix` | string | "anti-frost" | Suffix added to the switch name in Home App |
+
+### Behavior
+
+- **Switch ON (device was OFF)**: Powers on the AC in HEAT mode at 21°C, waits 2 seconds, then sets temperature to `antiFrostTemperature`
+- **Switch ON (device was ON)**: Sets mode to HEAT and temperature to `antiFrostTemperature`
+- **Switch OFF (device was OFF before)**: Turns the AC back OFF
+- **Switch OFF (device was ON before)**: Restores previous heating setpoint
+- **HomeKit display**: Shows `antiFrostTemperature` while anti-frost is active instead of device reported temperature
+
+## Fork Changelog
+
+### [2.3.4] - 2026-06-05
+- Added anti-frost switch, temperature and name suffix fields to Homebridge UI configuration (no more manual JSON editing)
+
+### [2.3.3] - 2026-06-05
+- Improved npm keywords for better discoverability
+- Updated package.json with author info and contributor credit to original author Peter Eiben
+
+### [2.3.2] - 2026-06-05
+- Initial fork release
+- Added anti-frost switch feature (antiFrostSwitch, antiFrostTemperature, antiFrostNameSuffix)
+- Auto power-on in HEAT mode at 21°C before activating anti-frost when device is OFF
+- Restore original device state (ON/OFF + temperature) when anti-frost is deactivated
+- HomeKit displays anti-frost temperature (e.g. 8°C) while anti-frost is active
 
 ## Refs & Credits
 
