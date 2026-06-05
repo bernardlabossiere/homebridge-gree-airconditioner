@@ -23,6 +23,7 @@ export class GreeAirConditioner {
   private status: { [key: string]: unknown };
   private tsAccessory: GreeAirConditionerTS | null = null;
   private powerPending = -1;
+  private antiFrostPreviouslyOn = false;
   private modePending = -1;
   private silentTimeRanges?: [number, number][];
   private antiFrostService?: Service;
@@ -524,6 +525,7 @@ export class GreeAirConditioner {
       if (cur && cur >= 16) {
         this.lastHeatSetpoint = cur;
       }
+      this.antiFrostPreviouslyOn = this.power;
       if (!this.power) {
         this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost: device OFF, powering on HEAT 21°C first`);
         this.sendCommand({
@@ -557,21 +559,29 @@ export class GreeAirConditioner {
         .updateValue(this.platform.Characteristic.TargetHeaterCoolerState.HEAT);
 
     } else {
-      const restore = (this.lastHeatSetpoint && this.lastHeatSetpoint >= 16)
-        ? this.lastHeatSetpoint : 21;
-
-      this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost OFF -> restore ${restore}°C`);
-
-      this.sendCommand({
-        [commands.nofrost.code]: commands.nofrost.value.off,
-        [commands.targetTemperature.code]: restore,
-      });
-
-      this.status[commands.nofrost.code] = commands.nofrost.value.off;
-      this.status[commands.targetTemperature.code] = restore;
-
-      this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
-        .updateValue(restore);
+      if (!this.antiFrostPreviouslyOn) {
+        this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost OFF -> device was OFF, turning off`);
+        this.sendCommand({
+          [commands.power.code]: commands.power.value.off,
+          [commands.nofrost.code]: commands.nofrost.value.off,
+        });
+        this.power = false;
+        this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.Active)
+          .updateValue(this.platform.Characteristic.Active.INACTIVE);
+        this.status[commands.nofrost.code] = commands.nofrost.value.off;
+      } else {
+        const restore = (this.lastHeatSetpoint && this.lastHeatSetpoint >= 16)
+          ? this.lastHeatSetpoint : 21;
+        this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost OFF -> restore ${restore}°C`);
+        this.sendCommand({
+          [commands.nofrost.code]: commands.nofrost.value.off,
+          [commands.targetTemperature.code]: restore,
+        });
+        this.status[commands.nofrost.code] = commands.nofrost.value.off;
+        this.status[commands.targetTemperature.code] = restore;
+        this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
+          .updateValue(restore);
+      }
     }
 
     this.antiFrostService?.getCharacteristic(this.platform.Characteristic.On).updateValue(on);
