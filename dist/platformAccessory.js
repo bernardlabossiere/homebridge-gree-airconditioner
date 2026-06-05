@@ -23,6 +23,8 @@ export class GreeAirConditioner {
     powerPending = -1;
     modePending = -1;
     silentTimeRanges;
+    antiFrostService;
+    lastHeatSetpoint;
     constructor(platform, accessory, deviceConfig, tsAccessoryMac, socket) {
         this.platform = platform;
         this.accessory = accessory;
@@ -184,6 +186,10 @@ export class GreeAirConditioner {
             }
         }
         this.HeaterCooler.setPrimaryService(true);
+        // Anti-frost switch service (compatible with child bridge)
+        if (this.deviceConfig.antiFrostSwitch) {
+            setTimeout(() => this.ensureAntiFrostService(), 2000);
+        }
         this.TemperatureSensor?.setPrimaryService(false);
         this.Fan?.setPrimaryService(false);
         this.platform.api.updatePlatformAccessories([this.accessory]);
@@ -283,6 +289,9 @@ export class GreeAirConditioner {
     }
     async setTargetTemperature(value) {
         this.platform.log.debug(`[${this.getDeviceLabel()}] Set ThresholdTemperature ->`, value);
+        if (value >= 16) {
+            this.lastHeatSetpoint = value;
+        }
         this.targetTemperature = value;
     }
     async setTemperatureDisplayUnits(value) {
@@ -426,6 +435,62 @@ export class GreeAirConditioner {
      * @example
      * this.service.updateCharacteristic(this.platform.Characteristic.On, true)
      */
+    ensureAntiFrostService() {
+        const baseName = this.accessory.displayName;
+        const suffix = (this.deviceConfig.antiFrostNameSuffix || 'anti-frost').trim();
+        const name = suffix ? `${baseName} ${suffix}` : `${baseName} anti-frost`;
+        this.antiFrostService = this.accessory.getService(this.platform.Service.Switch) ||
+            this.accessory.addService(this.platform.Service.Switch, name, 'antifrost');
+        this.antiFrostService.setCharacteristic(this.platform.Characteristic.ConfiguredName, name);
+        this.antiFrostService.getCharacteristic(this.platform.Characteristic.On)
+            .onGet(this.getAntiFrostState.bind(this))
+            .onSet(this.setAntiFrostState.bind(this));
+        this.platform.api.updatePlatformAccessories([this.accessory]);
+        this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost service added`);
+    }
+    async getAntiFrostState() {
+        return this.status[commands.nofrost.code] === commands.nofrost.value.on;
+    }
+    async setAntiFrostState(value) {
+        const on = value;
+        const antiFrostTemp = Number(this.deviceConfig.antiFrostTemperature ?? 8);
+        if (!this.accessory.bound) {
+            this.platform.log.warn(`[${this.getDeviceLabel()}] Anti-frost: device not bound yet`);
+            return;
+        }
+        if (on) {
+            const cur = this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature).value;
+            if (cur && cur >= 16) {
+                this.lastHeatSetpoint = cur;
+            }
+            this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost ON -> ${antiFrostTemp}°C`);
+            this.sendCommand({
+                [commands.mode.code]: commands.mode.value.heat,
+                [commands.nofrost.code]: commands.nofrost.value.on,
+                [commands.targetTemperature.code]: antiFrostTemp,
+            });
+            this.status[commands.nofrost.code] = commands.nofrost.value.on;
+            this.status[commands.targetTemperature.code] = antiFrostTemp;
+            this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
+                .updateValue(antiFrostTemp);
+            this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.TargetHeaterCoolerState)
+                .updateValue(this.platform.Characteristic.TargetHeaterCoolerState.HEAT);
+        }
+        else {
+            const restore = (this.lastHeatSetpoint && this.lastHeatSetpoint >= 16)
+                ? this.lastHeatSetpoint : 21;
+            this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost OFF -> restore ${restore}°C`);
+            this.sendCommand({
+                [commands.nofrost.code]: commands.nofrost.value.off,
+                [commands.targetTemperature.code]: restore,
+            });
+            this.status[commands.nofrost.code] = commands.nofrost.value.off;
+            this.status[commands.targetTemperature.code] = restore;
+            this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
+                .updateValue(restore);
+        }
+        this.antiFrostService?.getCharacteristic(this.platform.Characteristic.On).updateValue(on);
+    }
     async getActive() {
         const currentPower = this.power && [commands.mode.value.cool, commands.mode.value.heat, commands.mode.value.auto].includes(this.mode);
         this.platform.log.debug(`[${this.getDeviceLabel()}] Get Heater-Cooler Active ->`, currentPower ? 'ACTIVE' : 'INACTIVE');

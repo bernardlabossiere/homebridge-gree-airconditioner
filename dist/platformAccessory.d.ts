@@ -24,6 +24,8 @@ export declare class GreeAirConditioner {
     private powerPending;
     private modePending;
     private silentTimeRanges?;
+    private antiFrostService?;
+    private lastHeatSetpoint?;
     constructor(platform: GreeACPlatform, accessory: MyPlatformAccessory, deviceConfig: DeviceConfig, tsAccessoryMac: string, socket: dgram.Socket);
     initCharacteristics(): void;
     initAccessory(): void;
@@ -55,6 +57,9 @@ export declare class GreeAirConditioner {
      * @example
      * this.service.updateCharacteristic(this.platform.Characteristic.On, true)
      */
+    private ensureAntiFrostService;
+    getAntiFrostState(): Promise<CharacteristicValue>;
+    setAntiFrostState(value: CharacteristicValue): Promise<void>;
     getActive(): Promise<CharacteristicValue>;
     getFanActive(): Promise<CharacteristicValue>;
     getCurrentHeaterCoolerState(): Promise<CharacteristicValue>;

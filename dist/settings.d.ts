@@ -48,6 +48,9 @@ export interface DeviceConfig {
     ip?: string;
     fanControlEnabled?: boolean;
     silentTimeRange?: string;
+    antiFrostSwitch?: boolean;
+    antiFrostTemperature?: number;
+    antiFrostNameSuffix?: string;
 }
 interface DefaultDeviceConfig extends DeviceConfig {
     temperatureStepSize: number;
