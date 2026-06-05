@@ -2,7 +2,7 @@
   "name": "homebridge-gree-ac-antifrost",
   "displayName": "GREE Air Conditioner with Anti-Frost",
   "type": "module",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "private": false,
   "description": "Control GREE Air Conditioners from Homebridge with anti-frost switch support. Fork of homebridge-gree-ac by Peter Eiben with additional anti-frost functionality.",
   "author": "Bernard Labossiere",
