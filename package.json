@@ -1,26 +1,28 @@
 {
-  "name": "homebridge-gree-ac",
-  "displayName": "GREE Air Conditioner",
+  "name": "homebridge-gree-ac-antifrost",
+  "displayName": "GREE Air Conditioner with Anti-Frost",
   "type": "module",
   "version": "2.3.2",
   "private": false,
-  "description": "Control GREE Air Conditioners from Homebridge",
-  "author": "Peter Eiben",
+  "description": "Control GREE Air Conditioners from Homebridge with anti-frost switch support. Fork of homebridge-gree-ac by Peter Eiben with additional anti-frost functionality.",
+  "author": "Bernard Labossiere",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/eibenp/homebridge-gree-airconditioner#readme",
+  "homepage": "https://github.com/bernardlabossiere/homebridge-gree-airconditioner#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eibenp/homebridge-gree-airconditioner.git"
+    "url": "https://github.com/bernardlabossiere/homebridge-gree-airconditioner.git"
   },
   "bugs": {
-    "url": "https://github.com/eibenp/homebridge-gree-airconditioner/issues"
+    "url": "https://github.com/bernardlabossiere/homebridge-gree-airconditioner/issues"
   },
   "keywords": [
     "homebridge-plugin",
     "air contitioning",
     "gree ac",
     "homebridge heatercooler",
-    "gree air conditioner"
+    "gree air conditioner",
+    "anti-frost",
+    "nofrost"
   ],
   "main": "dist/index.js",
   "directories": {
@@ -53,8 +55,11 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.2"
   },
-  "funding": {
-    "type": "paypal",
-    "url": "https://paypal.me/eibenp"
-  }
+  "contributors": [
+    {
+      "name": "Peter Eiben",
+      "url": "https://github.com/eibenp",
+      "note": "Original author of homebridge-gree-ac - this plugin is a fork built upon his excellent work"
+    }
+  ]
 }
