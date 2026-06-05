@@ -524,6 +524,22 @@ export class GreeAirConditioner {
       if (cur && cur >= 16) {
         this.lastHeatSetpoint = cur;
       }
+      if (!this.power) {
+        this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost: device OFF, powering on HEAT 21°C first`);
+        this.sendCommand({
+          [commands.power.code]: commands.power.value.on,
+          [commands.mode.code]: commands.mode.value.heat,
+          [commands.targetTemperature.code]: 21,
+        });
+        this.power = true;
+        this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.Active)
+          .updateValue(this.platform.Characteristic.Active.ACTIVE);
+        this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.TargetHeaterCoolerState)
+          .updateValue(this.platform.Characteristic.TargetHeaterCoolerState.HEAT);
+        this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
+          .updateValue(21);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
       this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost ON -> ${antiFrostTemp}°C`);
 
       this.sendCommand({
