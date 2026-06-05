@@ -133,7 +133,7 @@
             },
             "antiFrostTemperature": {
               "type": "number",
-              "title": "Anti-frost temperature (°C)",
+              "title": "Anti-frost temperature (\u00b0C)",
               "default": 8,
               "minimum": 8,
               "maximum": 30,
@@ -271,7 +271,7 @@
                 }
               ]
             },
-            "encryptionVersion" : {
+            "encryptionVersion": {
               "type": "integer",
               "required": true,
               "default": 0,
@@ -450,7 +450,7 @@
               "key": "devices[].minimumTargetTemperature",
               "flex": "1 1 50%",
               "title": "Minimum target temperature:",
-              "description": "Minimum target temperature (in ℃)",
+              "description": "Minimum target temperature (in \u2103)",
               "condition": {
                 "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
               }
@@ -459,7 +459,7 @@
               "key": "devices[].maximumTargetTemperature",
               "flex": "1 1 50%",
               "title": "Maximum target temperature:",
-              "description": "Maximum target temperature (in ℃)",
+              "description": "Maximum target temperature (in \u2103)",
               "condition": {
                 "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
               }
@@ -468,7 +468,7 @@
               "key": "devices[].sensorOffset",
               "flex": "1 1 50%",
               "title": "Temperature offset:",
-              "description": "Temperature sensor calibration (in ℃)",
+              "description": "Temperature sensor calibration (in \u2103)",
               "condition": {
                 "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
               }
@@ -477,7 +477,7 @@
               "key": "devices[].temperatureStepSize",
               "flex": "1 1 50%",
               "title": "Temperature step size:",
-              "description": "Valid values: 0.5 (for °F) and 1 (for °C)<BR />(Calculate from Homebridge UI temperature units parameter if empty or invalid)",
+              "description": "Valid values: 0.5 (for \u00b0F) and 1 (for \u00b0C)<BR />(Calculate from Homebridge UI temperature units parameter if empty or invalid)",
               "condition": {
                 "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
               }
@@ -489,6 +489,33 @@
               "description": "If enabled, then xFan functionality is turned on automatically on the device",
               "condition": {
                 "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].antiFrostSwitch",
+              "flex": "1 1 50%",
+              "title": "Anti-frost switch",
+              "description": "Adds an anti-frost switch to the accessory in Home App",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true);"
+              }
+            },
+            {
+              "key": "devices[].antiFrostTemperature",
+              "flex": "1 1 25%",
+              "title": "Anti-frost temperature:",
+              "description": "Target temperature when anti-frost is enabled (in \u00b0C)",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true && model.devices[arrayIndices].antiFrostSwitch === true);"
+              }
+            },
+            {
+              "key": "devices[].antiFrostNameSuffix",
+              "flex": "1 1 25%",
+              "title": "Anti-frost name suffix:",
+              "description": "Suffix added to the device name for the anti-frost switch",
+              "condition": {
+                "functionBody": "return (model.devices && model.devices[arrayIndices] && model.devices[arrayIndices].mac && /^([a-f0-9]{12}|default|[a-f0-9]+@[a-f0-9]{12})$/.test(model.devices[arrayIndices].mac) && model.devices[arrayIndices].disabled !== true && model.devices[arrayIndices].antiFrostSwitch === true);"
               }
             },
             {
