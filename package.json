@@ -17,12 +17,19 @@
   },
   "keywords": [
     "homebridge-plugin",
-    "air contitioning",
+    "homebridge",
+    "homekit",
+    "gree",
     "gree ac",
-    "homebridge heatercooler",
     "gree air conditioner",
+    "air conditioner",
+    "heatercooler",
+    "heater cooler",
     "anti-frost",
-    "nofrost"
+    "antifrost",
+    "nofrost",
+    "thermopompe",
+    "heat pump"
   ],
   "main": "dist/index.js",
   "directories": {
