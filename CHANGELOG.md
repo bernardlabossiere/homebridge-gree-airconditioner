@@ -1,5 +1,8 @@
 # Changelog
 
+## [2.3.6] - 2026-06-26
+- Fixed: leaving anti-frost now restores the exact state the unit had before it was enabled (off stays off; otherwise the previous mode and setpoint are restored), instead of always falling back to Heat 21°C.
+
 ## [2.3.2] - 2026-05-08
 
 **<ins>Reminders:</ins>**

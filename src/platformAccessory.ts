@@ -28,6 +28,7 @@ export class GreeAirConditioner {
   private silentTimeRanges?: [number, number][];
   private antiFrostService?: Service;
   private lastHeatSetpoint?: number;
+  private preAntiFrost?: { power: boolean; mode: number; temperature: number };
 
   constructor(
     private readonly platform: GreeACPlatform,
@@ -526,6 +527,11 @@ export class GreeAirConditioner {
         this.lastHeatSetpoint = cur;
       }
       this.antiFrostPreviouslyOn = this.power;
+      this.preAntiFrost = {
+        power: this.power,
+        mode: this.mode,
+        temperature: (this.status[commands.targetTemperature.code] as number) ?? 21,
+      };
       if (!this.power) {
         this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost: device OFF, powering on HEAT 21°C first`);
         this.sendCommand({
@@ -559,29 +565,46 @@ export class GreeAirConditioner {
         .updateValue(this.platform.Characteristic.TargetHeaterCoolerState.HEAT);
 
     } else {
-      if (!this.antiFrostPreviouslyOn) {
-        this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost OFF -> device was OFF, turning off`);
+      const snap = this.preAntiFrost;
+      this.status[commands.nofrost.code] = commands.nofrost.value.off;
+      if (!snap || !snap.power) {
+        this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost OFF -> restore previous state: OFF`);
         this.sendCommand({
           [commands.power.code]: commands.power.value.off,
           [commands.nofrost.code]: commands.nofrost.value.off,
         });
-        this.power = false;
+        this.status[commands.power.code] = commands.power.value.off;
         this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.Active)
           .updateValue(this.platform.Characteristic.Active.INACTIVE);
-        this.status[commands.nofrost.code] = commands.nofrost.value.off;
       } else {
-        const restore = (this.lastHeatSetpoint && this.lastHeatSetpoint >= 16)
-          ? this.lastHeatSetpoint : 21;
-        this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost OFF -> restore ${restore}°C`);
+        this.platform.log.info(`[${this.getDeviceLabel()}] Anti-frost OFF -> restore previous state: mode=${snap.mode} ${snap.temperature}°C`);
         this.sendCommand({
+          [commands.power.code]: commands.power.value.on,
+          [commands.mode.code]: snap.mode,
           [commands.nofrost.code]: commands.nofrost.value.off,
-          [commands.targetTemperature.code]: restore,
+          [commands.targetTemperature.code]: snap.temperature,
         });
-        this.status[commands.nofrost.code] = commands.nofrost.value.off;
-        this.status[commands.targetTemperature.code] = restore;
-        this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
-          .updateValue(restore);
+        this.status[commands.power.code] = commands.power.value.on;
+        this.status[commands.mode.code] = snap.mode;
+        this.status[commands.targetTemperature.code] = snap.temperature;
+        const targetState = snap.mode === commands.mode.value.cool
+          ? this.platform.Characteristic.TargetHeaterCoolerState.COOL
+          : snap.mode === commands.mode.value.heat
+            ? this.platform.Characteristic.TargetHeaterCoolerState.HEAT
+            : this.platform.Characteristic.TargetHeaterCoolerState.AUTO;
+        this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.Active)
+          .updateValue(this.platform.Characteristic.Active.ACTIVE);
+        this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.TargetHeaterCoolerState)
+          .updateValue(targetState);
+        if (snap.mode === commands.mode.value.heat) {
+          this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
+            .updateValue(snap.temperature);
+        } else if (snap.mode === commands.mode.value.cool) {
+          this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.CoolingThresholdTemperature)
+            .updateValue(snap.temperature);
+        }
       }
+      this.preAntiFrost = undefined;
     }
 
     this.antiFrostService?.getCharacteristic(this.platform.Characteristic.On).updateValue(on);
