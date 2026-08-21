@@ -436,7 +436,9 @@ export class GreeAirConditioner {
   }
 
   async setFanRotationSpeed(value: CharacteristicValue) {
-    if (value !== 0 &&
+    const heaterCoolerActive = this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.Active).value ===
+      this.platform.Characteristic.Active.ACTIVE;
+    if (value !== 0 && !heaterCoolerActive &&
       this.Fan?.getCharacteristic(this.platform.Characteristic.Active).value !== this.platform.Characteristic.Active.ACTIVE) {
       this.Fan?.getCharacteristic(this.platform.Characteristic.Active).setValue(this.platform.Characteristic.Active.ACTIVE);
     }
