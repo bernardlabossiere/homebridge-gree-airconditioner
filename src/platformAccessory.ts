@@ -14,6 +14,9 @@ import { FEATURE_SWITCHES, FEATURE_SWITCH_SERVICES, autoFanFeatureSwitchCommand,
   turboRotationSpeedProjection, xFanFeatureSwitchCommand, xFanModeCommand } from './featureSwitches.js';
 import type { FeatureSwitchName } from './featureSwitches.js';
 
+// Subtype of the anti-frost Switch service (unchanged since v2.3.2, so cached accessories keep working)
+const ANTI_FROST_SUBTYPE = 'antifrost';
+
 /**
  * Platform Accessory
  * An instance of this class is created for each accessory your platform registers
@@ -226,6 +229,13 @@ export class GreeAirConditioner {
     // Anti-frost switch service (compatible with child bridge)
     if (this.deviceConfig.antiFrostSwitch) {
       setTimeout(() => this.ensureAntiFrostService(), 2000);
+    } else {
+      // Remove a cached anti-frost switch when the option has been turned off
+      const cachedAntiFrost = this.accessory.getServiceById(this.platform.Service.Switch, ANTI_FROST_SUBTYPE);
+      if (cachedAntiFrost) {
+        this.platform.log.debug(`[${this.getDeviceLabel()}] Remove anti-frost switch service (%s)`, cachedAntiFrost.displayName);
+        this.accessory.removeService(cachedAntiFrost);
+      }
     }
 
     this.TemperatureSensor?.setPrimaryService(false);
@@ -637,8 +647,10 @@ export class GreeAirConditioner {
     const suffix = (this.deviceConfig.antiFrostNameSuffix || 'anti-frost').trim();
     const name = suffix ? `${baseName} ${suffix}` : `${baseName} anti-frost`;
 
-    this.antiFrostService = this.accessory.getService(this.platform.Service.Switch) ||
-      this.accessory.addService(this.platform.Service.Switch, name, 'antifrost');
+    // Look the switch up by its subtype: the accessory can also carry the optional
+    // GREE feature switches (Auto Fan, Quiet, Turbo...), which are Switch services too.
+    this.antiFrostService = this.accessory.getServiceById(this.platform.Service.Switch, ANTI_FROST_SUBTYPE) ||
+      this.accessory.addService(this.platform.Service.Switch, name, ANTI_FROST_SUBTYPE);
 
     this.antiFrostService.setCharacteristic(this.platform.Characteristic.ConfiguredName, name);
 
@@ -662,6 +674,9 @@ export class GreeAirConditioner {
       this.platform.log.warn(`[${this.getDeviceLabel()}] Anti-frost: device not bound yet`);
       return;
     }
+    // Fail before changing any state while the UDP session is recovering
+    // (HomeKit then shows "No Response" instead of a half-applied anti-frost)
+    this.requireReadyForCommand();
 
     if (on) {
       const cur = this.HeaterCooler?.getCharacteristic(
