@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.0] - 2026-11-01
+- Added: optional GREE feature switches (Auto Fan, Quiet, Turbo, X-Fan, Health, Light). Code from the fakepooh fork by Alex Palei: https://github.com/fakepooh/homebridge-gree-airconditioner
+- Added: automatic recovery of the GREE UDP session and validation of command replies, with automated tests. Code from the fakepooh fork by Alex Palei.
+- Fixed: changing the fan speed while heating or cooling no longer switches the unit to fan mode. Fix from the marcuscosinus fork: https://github.com/marcuscosinus/hb-gree-ac/commit/eec1e7a
+- Fixed: anti-frost options were missing from the translated Homebridge UI (French, German, Spanish, Hungarian, Polish, Portuguese).
+- Fixed: the anti-frost switch is looked up by its own identifier, so it cannot take over one of the feature switches.
+- Changed: removing `antiFrostSwitch` from the configuration now removes the switch from Home App.
+
 ## [2.3.6] - 2026-06-26
 - Fixed: leaving anti-frost now restores the exact state the unit had before it was enabled (off stays off; otherwise the previous mode and setpoint are restored), instead of always falling back to Heat 21°C.
 

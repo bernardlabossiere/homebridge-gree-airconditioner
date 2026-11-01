@@ -629,6 +629,8 @@ export class GreeACPlatform implements DynamicPlatformPlugin {
       });
       this.handlers[deviceInfo.mac] = ac;
       if (!deviceInfo.mac.includes('@')) {
+        // Récupération automatique de la session UDP : code repris du fork de fakepooh (Alex Palei)
+        // https://github.com/fakepooh/homebridge-gree-airconditioner (Apache 2.0)
         ac.session = new DeviceSession(ac.deviceConfig.statusUpdateInterval * 1000,
           (alternate) => {
             ac.key = undefined;

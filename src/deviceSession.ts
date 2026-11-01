@@ -1,3 +1,8 @@
+/*
+ * Code repris du fork de fakepooh (Alex Palei) :
+ * https://github.com/fakepooh/homebridge-gree-airconditioner
+ * Licence Apache 2.0. Intégré tel quel dans le fork de Bernard Labossiere (v2.4.0).
+ */
 import { BINDING_TIMEOUT } from './settings.js';
 
 type Phase = 'idle' | 'binding' | 'status' | 'ready' | 'closed';

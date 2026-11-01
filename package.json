@@ -2,7 +2,7 @@
   "name": "homebridge-gree-ac-antifrost",
   "displayName": "GREE Air Conditioner with Anti-Frost",
   "type": "module",
-  "version": "2.3.6",
+  "version": "2.4.0",
   "private": false,
   "description": "Control GREE Air Conditioners from Homebridge with anti-frost switch support. Fork of homebridge-gree-ac by Peter Eiben with additional anti-frost functionality.",
   "author": "Bernard Labossiere",
@@ -69,6 +69,16 @@
       "name": "Peter Eiben",
       "url": "https://github.com/eibenp",
       "note": "Original author of homebridge-gree-ac - this plugin is a fork built upon his excellent work"
+    },
+    {
+      "name": "Alex Palei (fakepooh)",
+      "url": "https://github.com/fakepooh",
+      "note": "Optional GREE feature switches, UDP session recovery and tests, from his fork"
+    },
+    {
+      "name": "marcuscosinus",
+      "url": "https://github.com/marcuscosinus",
+      "note": "Fan speed fix while heating or cooling, from his fork hb-gree-ac"
     }
   ]
 }

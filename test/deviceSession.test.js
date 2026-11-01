@@ -1,3 +1,8 @@
+/*
+ * Code repris du fork de fakepooh (Alex Palei) :
+ * https://github.com/fakepooh/homebridge-gree-airconditioner
+ * Licence Apache 2.0. Intégré tel quel dans le fork de Bernard Labossiere (v2.4.0).
+ */
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { DeviceSession } from '../dist/deviceSession.js';

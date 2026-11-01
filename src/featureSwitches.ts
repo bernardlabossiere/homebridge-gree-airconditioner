@@ -1,3 +1,8 @@
+/*
+ * Code repris du fork de fakepooh (Alex Palei) :
+ * https://github.com/fakepooh/homebridge-gree-airconditioner
+ * Licence Apache 2.0. Intégré tel quel dans le fork de Bernard Labossiere (v2.4.0).
+ */
 export const FEATURE_SWITCHES = ['autoFan', 'quiet', 'powerful', 'xFan', 'health', 'light'] as const;
 
 export type FeatureSwitchName = typeof FEATURE_SWITCHES[number];

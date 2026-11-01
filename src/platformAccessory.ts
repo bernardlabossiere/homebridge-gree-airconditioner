@@ -494,6 +494,9 @@ export class GreeAirConditioner {
     this.platform.api.updatePlatformAccessories([this.accessory]);
   }
 
+  // Interrupteurs optionnels GREE (Auto Fan, Quiet, Turbo, X-Fan, Health, Light) :
+  // code repris du fork de fakepooh (Alex Palei)
+  // https://github.com/fakepooh/homebridge-gree-airconditioner (Apache 2.0)
   private initFeatureSwitchServices() {
     const configured = mergeFeatureSwitchConfig(undefined, this.deviceConfig.featureSwitches);
     for (const name of FEATURE_SWITCHES) {
@@ -587,6 +590,9 @@ export class GreeAirConditioner {
   }
 
   async setFanRotationSpeed(value: CharacteristicValue) {
+    // Correctif repris du fork de marcuscosinus : ne pas basculer en mode Ventilation
+    // quand on change la vitesse pendant que la thermopompe chauffe ou refroidit.
+    // https://github.com/marcuscosinus/hb-gree-ac/commit/eec1e7a (Apache 2.0)
     const heaterCoolerActive = this.HeaterCooler?.getCharacteristic(this.platform.Characteristic.Active).value ===
       this.platform.Characteristic.Active.ACTIVE;
     if (value !== 0 && !heaterCoolerActive &&

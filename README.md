@@ -89,6 +89,8 @@ This plugin was designed to support the Home App's Heater Cooler functionality u
 
 ### Optional GREE feature switches
 
+> This feature comes from the fork of [fakepooh (Alex Palei)](https://github.com/fakepooh/homebridge-gree-airconditioner) and is included here with credit. See [Fork credits](#fork-credits).
+
 The optional `featureSwitches` configuration adds standard HomeKit Switch services to a device. All switches are disabled by default; omitted keys remain disabled. Enable only functions supported by your GREE model and firmware. For example:
 
 ```json
@@ -612,10 +614,21 @@ Add the following parameters to each device in the `devices` section:
 - **Switch ON (device was OFF)**: Powers on the AC in HEAT mode at 21°C, waits 2 seconds, then sets temperature to `antiFrostTemperature`
 - **Switch ON (device was ON)**: Sets mode to HEAT and temperature to `antiFrostTemperature`
 - **Switch OFF (device was OFF before)**: Turns the AC back OFF
-- **Switch OFF (device was ON before)**: Restores previous heating setpoint
+- **Switch OFF (device was ON before)**: Restores the previous mode and setpoint (heat, cool or auto)
 - **HomeKit display**: Shows `antiFrostTemperature` while anti-frost is active instead of device reported temperature
+- **Feature switches**: The anti-frost switch is independent from the optional GREE feature switches (Auto Fan, Quiet, Turbo...), both can be enabled on the same device
 
 ## Fork Changelog
+
+### [2.4.0] - 2026-11-01
+- Added optional GREE feature switches (Auto Fan, Quiet, Turbo, X-Fan, Health, Light), UDP session recovery and command reply validation, from the [fakepooh fork](https://github.com/fakepooh/homebridge-gree-airconditioner) by Alex Palei
+- Fixed: changing the fan speed while heating or cooling no longer switches the unit to fan mode, from the [marcuscosinus fork](https://github.com/marcuscosinus/hb-gree-ac)
+- Fixed: anti-frost options now appear in the Homebridge UI in every language, not only English
+- Fixed: the anti-frost switch can no longer take over one of the feature switches
+- Removing `antiFrostSwitch` from the configuration now removes the switch from Home App
+
+### [2.3.6] - 2026-06-26
+- Leaving anti-frost restores the exact previous state (off stays off; otherwise previous mode and setpoint)
 
 ### [2.3.4] - 2026-06-05
 - Added anti-frost switch, temperature and name suffix fields to Homebridge UI configuration (no more manual JSON editing)
@@ -630,6 +643,15 @@ Add the following parameters to each device in the `devices` section:
 - Auto power-on in HEAT mode at 21°C before activating anti-frost when device is OFF
 - Restore original device state (ON/OFF + temperature) when anti-frost is deactivated
 - HomeKit displays anti-frost temperature (e.g. 8°C) while anti-frost is active
+
+## Fork credits
+
+This fork is built on the work of [Peter Eiben](https://github.com/eibenp) (original plugin) and includes code from other forks of his project, used under the Apache 2.0 license. Their commits keep their original authors in the git history.
+
+- **[fakepooh (Alex Palei)](https://github.com/fakepooh/homebridge-gree-airconditioner)** - optional GREE feature switches (`src/featureSwitches.ts`), UDP session recovery (`src/deviceSession.ts`), command reply validation and the automated tests in `test/`
+- **[marcuscosinus](https://github.com/marcuscosinus/hb-gree-ac)** - fix for the fan speed switching the unit to fan mode while heating or cooling ([commit eec1e7a](https://github.com/marcuscosinus/hb-gree-ac/commit/eec1e7a))
+
+Thank you both!
 
 ## Refs & Credits
 
